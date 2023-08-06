@@ -1,0 +1,3 @@
+export class RegisterSaleDto {
+  readonly;
+}
