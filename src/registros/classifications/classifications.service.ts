@@ -4,7 +4,7 @@ import {
   Classification,
   ClassificationDocument,
 } from '@/registros/classifications/schema/classification.schema';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { AddClassificationDto } from '@/registros/classifications/dto';
 import { GenericResponseInterface } from '@/shared/response/generic-response.interface';
 
