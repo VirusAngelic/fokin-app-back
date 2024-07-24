@@ -38,7 +38,7 @@ export class ClassificationsService {
   }
 
   async getAllClassifications() {
-    const classifications = await this.classificationModel.find();
+    const classifications = await this.classificationModel.find({}, '-__v');
     if (classifications === null) {
       const bodyResponse: GenericResponseInterface = {
         status: 0,
