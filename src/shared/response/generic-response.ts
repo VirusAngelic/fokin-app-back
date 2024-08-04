@@ -1,5 +1,3 @@
-import { GenericResponseInterface } from '@/shared/response/generic-response.interface';
-
 export class GenericResponse {
   private _status: number;
   private _message: string;

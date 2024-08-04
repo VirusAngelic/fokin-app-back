@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ClassificationsService } from './classifications.service';
 import { AddClassificationDto } from '@/registros/classifications/dto';
-import { GenericResponseInterface } from '@/shared/response/generic-response.interface';
+import { ClassificationResponse } from '@shared/response/classification.response';
 
 @Controller('classifications')
 export class ClassificationsController {
@@ -24,7 +24,7 @@ export class ClassificationsController {
   @Delete('/delete')
   removeClassification(
     @Query('id') id: string,
-  ): Promise<GenericResponseInterface> {
+  ): Promise<ClassificationResponse> {
     return this.classificationsService.deleteClassification(id);
   }
 }

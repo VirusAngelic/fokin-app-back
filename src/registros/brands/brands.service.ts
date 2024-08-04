@@ -32,7 +32,7 @@ export class BrandsService {
 
   async getAllBrands(): Promise<BrandResponse> {
     const bodyResponse: BrandResponse = new BrandResponse();
-    const brands = await this.brandModel.find();
+    const brands = await this.brandModel.find({}, '-__v');
     if (brands.length === 0) {
       bodyResponse.status = 404;
       bodyResponse.message = 'No brands found';
