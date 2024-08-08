@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { BrandsService } from './brands.service';
 import { AddBrandDto } from '@/registros/brands/dto';
 import { BrandResponse } from '@shared/response';
@@ -18,7 +18,7 @@ export class BrandsController {
   }
 
   @Delete('/delete')
-  removeBrand(@Body('id') id: string): Promise<BrandResponse> {
+  removeBrand(@Query('id') id: string): Promise<BrandResponse> {
     return this.brandsService.deleteBrand(id);
   }
 }

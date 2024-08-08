@@ -15,7 +15,9 @@ export class ClassificationsService {
     private readonly classificationModel: Model<ClassificationDocument>,
   ) {}
 
-  async createClassification(addClassificationDto: AddClassificationDto) {
+  async createClassification(
+    addClassificationDto: AddClassificationDto,
+  ): Promise<ClassificationResponse> {
     const createdClassification = await this.classificationModel.create(
       addClassificationDto,
     );
@@ -24,7 +26,6 @@ export class ClassificationsService {
       bodyResponse.status = 500;
       bodyResponse.message = 'Error creating classification';
       bodyResponse.data = null;
-      return bodyResponse;
     } else {
       bodyResponse.status = 201;
       bodyResponse.message = 'Classification created successfully';
@@ -33,7 +34,7 @@ export class ClassificationsService {
     return bodyResponse;
   }
 
-  async getAllClassifications() {
+  async getAllClassifications(): Promise<ClassificationResponse> {
     const classifications = await this.classificationModel.find({}, '-__v');
     const bodyResponse: ClassificationResponse = new ClassificationResponse();
 
@@ -49,7 +50,7 @@ export class ClassificationsService {
     return bodyResponse;
   }
 
-  async deleteClassification(id: string) {
+  async deleteClassification(id: string): Promise<ClassificationResponse> {
     const deletedClassification = await this.classificationModel
       .findByIdAndRemove(id)
       .exec();

@@ -46,7 +46,7 @@ export class BrandsService {
 
   async deleteBrand(id: string): Promise<BrandResponse> {
     const bodyResponse: BrandResponse = new BrandResponse();
-    const brand = await this.brandModel.findByIdAndDelete(id);
+    const brand = await this.brandModel.findByIdAndRemove(id).exec();
     if (brand === null) {
       bodyResponse.status = 404;
       bodyResponse.message = 'Brand not found';
