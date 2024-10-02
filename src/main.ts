@@ -17,7 +17,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
-    { logger: ['error', 'warn', 'log'] },
+    { logger: ['error', 'warn', 'log', 'debug'] },
   );
   app.enableCors(corsConfig);
   await app.listen(3000, '192.168.3.5');

@@ -15,7 +15,7 @@ export class SellersService {
     private readonly sellerModel: Model<SellerDocument>,
   ) {}
 
-  async createSeller(addSellerDto: AddSellerDto) {
+  async createSeller(addSellerDto: AddSellerDto): Promise<SellerResponse> {
     const createdSeller = await this.sellerModel.create(addSellerDto);
     const responseBody: SellerResponse = new SellerResponse();
     if (createdSeller === null) {
@@ -25,8 +25,8 @@ export class SellersService {
     } else {
       responseBody.status = 201;
       responseBody.message = 'Seller created successfully';
+      responseBody.data = createdSeller.id;
     }
-    responseBody._sellerName! = createdSeller.id;
     return responseBody;
   }
 
