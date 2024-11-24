@@ -4,6 +4,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { ConfigService } from '@nestjs/config';
 
 const corsConfig = {
   origin: '*',
@@ -19,7 +20,16 @@ async function bootstrap() {
     new FastifyAdapter(),
     { logger: ['error', 'warn', 'log', 'debug'] },
   );
+
+  //Getting env variables
+  const configService = app.get(ConfigService);
+
+  // Setting up the port and address
+  const PORT = configService.get('APP_PORT');
+  const ADDRESS = configService.get('APP_ADDRESS');
+
+  //Configuring the cors and listening to the app
   app.enableCors(corsConfig);
-  await app.listen(3000, '192.168.3.5');
+  await app.listen(PORT, ADDRESS);
 }
 bootstrap();
