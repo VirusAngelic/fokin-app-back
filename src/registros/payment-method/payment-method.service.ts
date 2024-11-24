@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { AddPaymentMethodDto } from '@/registros/payment-method/dto';
-import { GenericResponseInterface } from '@/shared/response/generic-response.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   PaymentMethod,
   PaymentMethodDocument,
 } from '@/registros/payment-method/schema/payment-method.schema';
 import { Model } from 'mongoose';
+import { PaymentMethodResponse } from '@shared/response';
 
 @Injectable()
 export class PaymentMethodService {
@@ -17,40 +17,38 @@ export class PaymentMethodService {
 
   /**
    * Create a payment method
-   * @param addPaymentMethod- DTO with the data to create a payment method
+   * @param addPaymentMethod
    */
   async createPaymentMethod(addPaymentMethod: AddPaymentMethodDto) {
     const createdPaymentMethod = await this.paymentMethodModel.create(
       addPaymentMethod,
     );
+    const bodyResponse = new PaymentMethodResponse();
     if (createdPaymentMethod === null) {
-      const bodyResponse: GenericResponseInterface = {
-        status: 0,
-        message: 'Error creating payment method',
-        data: null,
-      };
+      bodyResponse.message = 'Error creating payment method';
+      bodyResponse.data = null;
       bodyResponse.status = 500;
-      return bodyResponse;
+    } else {
+      bodyResponse.status = 201;
+      bodyResponse.data = createdPaymentMethod.id;
+      bodyResponse.message = 'Created payment method successfully';
     }
+    return bodyResponse;
   }
 
   async getAllPaymentMethods() {
     const paymentMethods = await this.paymentMethodModel.find();
+    const bodyResponse = new PaymentMethodResponse();
     if (paymentMethods === null) {
-      const bodyResponse: GenericResponseInterface = {
-        status: 0,
-        message: 'Error getting payment methods',
-        data: null,
-      };
+      bodyResponse.message = 'Error getting payment methods';
+      bodyResponse.data = null;
       bodyResponse.status = 500;
-      return bodyResponse;
+    } else {
+      bodyResponse.message = 'Payment methods obtained successfully';
+      bodyResponse.data = paymentMethods;
+      bodyResponse.status = 200;
     }
-    const bodyResponse: GenericResponseInterface = {
-      status: 0,
-      message: 'Payment methods obtained successfully',
-      data: paymentMethods,
-    };
-    bodyResponse.status = 200;
+
     return bodyResponse;
   }
 
@@ -58,14 +56,13 @@ export class PaymentMethodService {
     const deletedPaymentMethod = await this.paymentMethodModel
       .findByIdAndDelete(id)
       .exec();
+    const bodyResponse = new PaymentMethodResponse();
     if (deletedPaymentMethod === null) {
-      const bodyResponse: GenericResponseInterface = {
-        status: 0,
-        message: 'Error deleting payment method',
-        data: null,
-      };
+      bodyResponse.message = 'Error deleting payment method';
+      bodyResponse.data = null;
       bodyResponse.status = 500;
-      return bodyResponse;
+    } else {
     }
+    return bodyResponse;
   }
 }

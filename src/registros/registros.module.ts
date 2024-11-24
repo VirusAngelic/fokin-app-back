@@ -9,6 +9,8 @@ import {
 import { PaymentMethodModule } from './payment-method/payment-method.module';
 import { ClassificationsModule } from './classifications/classifications.module';
 import { SellersModule } from './sellers/sellers.module';
+import { BrandsModule } from './brands/brands.module';
+import { SuppliersModule } from '@/registros/suppliers/suppliers.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { SellersModule } from './sellers/sellers.module';
     PaymentMethodModule,
     ClassificationsModule,
     SellersModule,
+    BrandsModule,
+    SuppliersModule,
   ],
   controllers: [RegistrosController],
   providers: [RegistrosService],

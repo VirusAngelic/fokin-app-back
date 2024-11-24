@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { SellersService } from './sellers.service';
 import { AddSellerDto } from '@/registros/sellers/dto/add-seller.dto';
 
@@ -13,5 +13,9 @@ export class SellersController {
   @Get()
   getAllSellers() {
     return this.sellersService.getAllSellers();
+  }
+  @Delete('/delete')
+  removeSeller(@Query('id') id: string) {
+    return this.sellersService.deleteSeller(id);
   }
 }

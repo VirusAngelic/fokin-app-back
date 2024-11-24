@@ -4,9 +4,9 @@ import {
   Classification,
   ClassificationDocument,
 } from '@/registros/classifications/schema/classification.schema';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { AddClassificationDto } from '@/registros/classifications/dto';
-import { GenericResponseInterface } from '@/shared/response/generic-response.interface';
+import { ClassificationResponse } from '@shared/response/classification.response';
 
 @Injectable()
 export class ClassificationsService {
@@ -15,69 +15,56 @@ export class ClassificationsService {
     private readonly classificationModel: Model<ClassificationDocument>,
   ) {}
 
-  async createClassification(addClassificationDto: AddClassificationDto) {
+  async createClassification(
+    addClassificationDto: AddClassificationDto,
+  ): Promise<ClassificationResponse> {
     const createdClassification = await this.classificationModel.create(
       addClassificationDto,
     );
+    const bodyResponse: ClassificationResponse = new ClassificationResponse();
     if (createdClassification === null) {
-      const bodyResponse: GenericResponseInterface = {
-        status: 0,
-        message: 'Error creating classification',
-        data: null,
-      };
       bodyResponse.status = 500;
-      return bodyResponse;
+      bodyResponse.message = 'Error creating classification';
+      bodyResponse.data = null;
+    } else {
+      bodyResponse.status = 201;
+      bodyResponse.message = 'Classification created successfully';
+      bodyResponse.data = createdClassification.id;
     }
-    const bodyResponse: GenericResponseInterface = {
-      status: 0,
-      message: 'Classification created successfully',
-      data: createdClassification.id,
-    };
-    bodyResponse.status = 201;
     return bodyResponse;
   }
 
-  async getAllClassifications() {
-    const classifications = await this.classificationModel.find();
+  async getAllClassifications(): Promise<ClassificationResponse> {
+    const classifications = await this.classificationModel.find({}, '-__v');
+    const bodyResponse: ClassificationResponse = new ClassificationResponse();
+
     if (classifications === null) {
-      const bodyResponse: GenericResponseInterface = {
-        status: 0,
-        message: 'Error getting classifications',
-        data: null,
-      };
+      bodyResponse.message = 'Error getting classifications';
+      bodyResponse.data = null;
       bodyResponse.status = 500;
-      return bodyResponse;
+    } else {
+      bodyResponse.message = 'Classifications obtained successfully';
+      bodyResponse.data = classifications;
+      bodyResponse.status = 200;
     }
-    const bodyResponse: GenericResponseInterface = {
-      status: 0,
-      message: 'Classifications obtained successfully',
-      data: classifications,
-    };
-    bodyResponse.status = 200;
     return bodyResponse;
   }
 
-  async deleteClassification(id: string) {
+  async deleteClassification(id: string): Promise<ClassificationResponse> {
     const deletedClassification = await this.classificationModel
       .findByIdAndRemove(id)
       .exec();
-    console.log(deletedClassification);
-    console.log(id);
+    const bodyResponse: ClassificationResponse = new ClassificationResponse();
     if (deletedClassification === null) {
-      const bodyResponse: GenericResponseInterface = {
-        status: 0,
-        message: 'Error al borrar la clasificación',
-        data: 'not found',
-      };
+      bodyResponse.message = 'Error al borrar la clasificación';
+      bodyResponse.data = null;
       bodyResponse.status = 404;
-      return bodyResponse;
+    } else {
+      bodyResponse.status = 200;
+      bodyResponse.message = 'Clasificacion eliminada exitosamente';
+      bodyResponse.data = deletedClassification;
     }
-    const bodyResponse: GenericResponseInterface = {
-      status: 0,
-      message: 'Clasificacion eliminada exitosamente',
-      data: deletedClassification,
-    };
-    bodyResponse.status = 200;
+
     return bodyResponse;
   }
 }
