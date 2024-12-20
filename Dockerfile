@@ -1,18 +1,25 @@
-FROM ubuntu:latest
+FROM node:20.17.0 AS base
 LABEL authors="virus"
 
-WORKDIR /home/ubuntu
+#Stage 1: Install dependencies
+FROM base AS deps
+WORKDIR /home
+COPY package.json yarn.lock ./
+RUN corepack enable yarn && yarn install --frozen-lockfile
 
-RUN apt-get update && apt-get install -y \
-    git
+#Stage 2: Build the NestJs App
+FROM base AS builder
+WORKDIR /home
+COPY --from=deps /home/node_modules ./node_modules
+COPY . .
+RUN corepack enable yarn && yarn run build
 
-RUN git clone -b feature https://github.com/VirusAngelic/fokin-app-back.git
+#Stage 3: Production image
+FROM node:current-alpine AS prod
+WORKDIR /app
+COPY --from=builder /home/node_modules ./node_modules
+COPY --from=builder /home/dist /app
 
-EXPOSE 4000 3000
+EXPOSE 3000
 
-RUN cd fokin-app-back && \
-    apt-get install -y \
-    npm && \
-    npm install && \
-    npm start
-
+CMD ["node", "main"]
